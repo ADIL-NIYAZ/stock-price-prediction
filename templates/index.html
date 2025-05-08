@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Prediction Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(145deg, #1a1a2e, #33334d);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        header img {
+            width: 100px;
+            height: auto;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #f8f9fa;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .dropdown-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #292929;
+            border: 1px solid #444;
+            border-radius: 5px;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .dropdown-container:hover {
+            border-color: #FFD700;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            background-color: #333333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        select:focus {
+            background-color: #444;
+            color: #FFD700;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #FFD700;
+            color: #121212;
+            font-weight: bold;
+            font-size: 1.2em;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0px 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #FFC300;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #result {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 25px;
+            background-color: #222222;
+            border-radius: 8px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #recommendation {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        #sentiment {
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .loading {
+            font-style: italic;
+            color: #888;
+        }
+
+        #chart {
+            width: 100%;
+            border-radius: 5px;
+            margin-top: 20px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            padding: 8px 0;
+        }
+
+        ul li a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        ul li a:hover {
+            color: #FFC300;
+        }
+
+        .error {
+            color: #FF6666;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://img.freepik.com/free-vector/investor-with-laptop-monitoring-growth-dividends-trader-sitting-stack-money-investing-capital-analyzing-profit-graphs-vector-illustration-finance-stock-trading-investment_74855-8432.jpg?t=st=1733862126~exp=1733865726~hmac=c7edeae779b1aea7301f8c251ee6d72093a3fcab815f001281bc4227ece25b3f&w=2000" alt="Logo">
+        <h1>Stock Price Prediction</h1>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <div class="dropdown-container">
+                <label for="stock">Select Stock:</label>
+                <select id="stock">
+                    <!-- Dynamic stock options will be populated by JavaScript -->
+                </select>
+            </div>
+
+            <div class="dropdown-container">
+                <label for="period">Select Period:</label>
+                <select id="period">
+                    <option value="1y">1 Year</option>
+                    <option value="5y">5 Years</option>
+                    <option value="10y">10 Years</option>
+                </select>
+            </div>
+
+            <button onclick="fetchPrediction()">Predict</button>
+        </div>
+
+        <div id="result">
+            <p>Recommendation: <span id="recommendation" class="loading">Loading...</span></p>
+            <p>Sentiment Score: <span id="sentiment" class="loading">Loading...</span></p>
+            <img id="chart" src="" alt="Stock Chart" style="display:none;" />
+            <h3>Latest News</h3>
+            <ul id="news"></ul>
+            <p id="error-message" class="error"></p>
+        </div>
+    </main>
+
+    <script>
+        const stockOptions = {
+            "Apple": "AAPL",
+            "Tesla": "TSLA",
+            "Amazon": "AMZN",
+            "NVIDIA": "NVDA",
+            "Infosys": "INFY",
+        };
+
+        function populateStockDropdown() {
+            const stockSelect = document.getElementById("stock");
+            for (const [name, symbol] of Object.entries(stockOptions)) {
+                const option = document.createElement("option");
+                option.value = symbol;
+                option.textContent = `${name} (${symbol})`;
+                stockSelect.appendChild(option);
+            }
+        }
+
+        function fetchPrediction() {
+            const stock = document.getElementById('stock').value;
+            const period = document.getElementById('period').value;
+
+            document.getElementById('recommendation').textContent = 'Loading...';
+            document.getElementById('sentiment').textContent = 'Loading...';
+            document.getElementById('chart').style.display = 'none';
+            document.getElementById('news').innerHTML = '';
+            document.getElementById('error-message').textContent = '';
+
+            fetch(`/predict?stock=${stock}&period=${period}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('recommendation').textContent = data.recommendation;
+                    document.getElementById('sentiment').textContent = data.sentiment_score;
+
+                    document.getElementById('chart').src = data.chart_url;
+                    document.getElementById('chart').style.display = 'block';
+
+                    const newsHTML = data.articles.length
+                        ? data.articles.map(article => `<li><a href="${article.link}" target="_blank">${article.title}</a></li>`).join("")
+                        : "<li>No recent news available.</li>";
+
+                    document.getElementById('news').innerHTML = newsHTML;
+                })
+                .catch(error => {
+                    document.getElementById('error-message').textContent = `Error: ${error.message}`;
+                });
+        }
+
+        // Populate dropdown on page load
+        document.addEventListener("DOMContentLoaded", populateStockDropdown);
+    </script>
+</body>
+</html>
