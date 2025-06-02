@@ -19,11 +19,11 @@ logging.basicConfig(level=logging.INFO)
 analyzer = SentimentIntensityAnalyzer()
 
 # Alpha Vantage API key (stored securely via environment variable)
-ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY', 'DXA8V0DBY29OE8C3')
+ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY', 'ENTER YOUR ALPHA VANTAGE API KEY HERE')
 ts = TimeSeries(key=ALPHA_VANTAGE_API_KEY, output_format='pandas')
 
 # NewsAPI key (stored securely via environment variable)
-NEWS_API_KEY = os.getenv('NEWS_API_KEY', '4d57cb75b7c4443b836bee326b524663')
+NEWS_API_KEY = os.getenv('NEWS_API_KEY', 'ENTER YOUR NEWS API KEY HERE')
 
 # Mapping of company names to their stock symbols
 stock_symbol_mapping = {
